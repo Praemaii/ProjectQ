@@ -20,12 +20,12 @@ import org.json.JSONObject;
  *
  * @author Acer
  */
-public class loginuser extends javax.swing.JFrame {
+public class loginUser extends javax.swing.JFrame {
 
     DBCollection table;
     DB db;
 
-    public loginuser() {
+    public loginUser() {
 
         initComponents();
     }
@@ -42,15 +42,14 @@ public class loginuser extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        u = new javax.swing.JTextField();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
-        p = new javax.swing.JPasswordField();
+        txt_username = new javax.swing.JTextField();
+        btn_login = new javax.swing.JButton();
+        btn_back = new javax.swing.JButton();
+        txt_password = new javax.swing.JPasswordField();
 
         jLabel4.setText("jLabel4");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(515, 525));
         setResizable(false);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
@@ -61,37 +60,37 @@ public class loginuser extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("TH Sarabun New", 1, 36)); // NOI18N
         jLabel3.setText("Password");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 240, -1, -1));
-        getContentPane().add(u, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, 317, 40));
+        getContentPane().add(txt_username, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 180, 317, 40));
 
-        jButton1.setBackground(new java.awt.Color(255, 204, 51));
-        jButton1.setFont(new java.awt.Font("TH Sarabun New", 1, 24)); // NOI18N
-        jButton1.setText("Login");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btn_login.setBackground(new java.awt.Color(255, 204, 51));
+        btn_login.setFont(new java.awt.Font("TH Sarabun New", 1, 24)); // NOI18N
+        btn_login.setText("Login");
+        btn_login.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btn_loginActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 350, 110, -1));
+        getContentPane().add(btn_login, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 350, 110, -1));
 
-        jButton2.setBackground(new java.awt.Color(255, 204, 51));
-        jButton2.setFont(new java.awt.Font("TH Sarabun New", 1, 24)); // NOI18N
-        jButton2.setText("Back");
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 410, 110, 40));
-        getContentPane().add(p, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 320, 40));
+        btn_back.setBackground(new java.awt.Color(255, 204, 51));
+        btn_back.setFont(new java.awt.Font("TH Sarabun New", 1, 24)); // NOI18N
+        btn_back.setText("Back");
+        getContentPane().add(btn_back, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 410, 110, 40));
+        getContentPane().add(txt_password, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 280, 320, 40));
 
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btn_loginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_loginActionPerformed
         BasicDBObject document = new BasicDBObject();
         MongoClient mongo;
         try {
             mongo = new MongoClient("localhost", 27017);
             db = mongo.getDB("mini");
             table = db.getCollection("users");
-            document.put("Username", u.getText());
-            document.put("Password", p.getText());
+            document.put("Username", txt_username.getText());
+            document.put("Password", txt_password.getText());
             document.put("Status", "Driver");
 
             DBCursor cc = table.find();
@@ -100,13 +99,13 @@ public class loginuser extends javax.swing.JFrame {
             while (cc.hasNext()) {
                 String Row = cc.next().toString();
                 JSONObject obj = new JSONObject(Row);
-                
+
                 //เช็คสถานะก่อนเข้าระบบ
                 if (obj.getString("Status").equals("Driver")) {
                     int c = table.find(document).count();
                     if (c > 0) {
                         JOptionPane.showMessageDialog(null, "เข้าสู่ระบบเรียบร้อย");
-                        Queueuser qu = new Queueuser(cursor.next().toString());
+                        queueUser qu = new queueUser(cursor.next().toString());
                         //queuUserDB quDB= new queuUserDB(cursor.next().toString());
                         d = true;
                         qu.show();
@@ -115,9 +114,9 @@ public class loginuser extends javax.swing.JFrame {
 
                     }
 
-                } else if (u.getText().isEmpty() && p.getText().isEmpty()) {
+                } else if (txt_username.getText().isEmpty() && txt_password.getText().isEmpty()) {
                     a = true;
-                } else if (u.getText().isEmpty() || p.getText().isEmpty()) {
+                } else if (txt_username.getText().isEmpty() || txt_password.getText().isEmpty()) {
                     a = true;
 
                 } else {
@@ -127,25 +126,23 @@ public class loginuser extends javax.swing.JFrame {
 
                         }
                     }
-                    }
+                }
             }
-                    if (d == false) {
-                        if (b == true) {
-                            JOptionPane.showMessageDialog(null, "Register Please!!");
-                        }
-                        u.setText(null);
-                        p.setText(null);
-                    }
-                    if (a == true) {
-                        JOptionPane.showMessageDialog(null, "โปรดใส่ Username และ Password");
-                    }
-                
-         
-        } catch (UnknownHostException e) {
-            
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
+            if (d == false) {
+                if (b == true) {
+                    JOptionPane.showMessageDialog(null, "Register Please!!");
+                }
+                txt_username.setText(null);
+                txt_password.setText(null);
+            }
+            if (a == true) {
+                JOptionPane.showMessageDialog(null, "โปรดใส่ Username และ Password");
+            }
 
+        } catch (UnknownHostException e) {
+
+        }
+    }//GEN-LAST:event_btn_loginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -164,31 +161,32 @@ public class loginuser extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(loginuser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(loginUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(loginuser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(loginUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(loginuser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(loginUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(loginuser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(loginUser.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new loginuser().setVisible(true);
+                new loginUser().setVisible(true);
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btn_back;
+    private javax.swing.JButton btn_login;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JPasswordField p;
-    private javax.swing.JTextField u;
+    private javax.swing.JPasswordField txt_password;
+    private javax.swing.JTextField txt_username;
     // End of variables declaration//GEN-END:variables
 }
